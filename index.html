@@ -853,7 +853,7 @@
     forceGetLocation();
     refreshGeoBtn.addEventListener('click', forceGetLocation);
 
-    // ==================== WATERMARK GAMBAR (DIPERBESAR 1.5X) ====================
+    // ==================== WATERMARK GAMBAR (VERSI AMAN DIPERBESAR 1.5X) ====================
     async function addWatermark(imgDataURL, timeText, locText) {
         return new Promise((resolve) => {
             const img = new Image();
@@ -864,32 +864,63 @@
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0);
                 
-                // UKURAN FONT DIPERBESAR 1.5 KALI DARI SEBELUMNYA
-                // Sebelumnya: Math.max(12, Math.floor(canvas.width / 30))
-                // Sekarang: Math.max(18, Math.floor(canvas.width / 20)) -> 1.5x lebih besar
-                const fontSize = Math.max(18, Math.floor(canvas.width / 20));
+                // MENGHITUNG UKURAN FONT YANG AMAN - DIPERBESAR 1.5X
+                // Basis font: 5% dari lebar gambar (lebih proporsional)
+                let fontSize = Math.max(14, Math.floor(canvas.width / 22));
+                // Batasi agar tidak terlalu besar (maksimal 60px)
+                fontSize = Math.min(fontSize, 60);
+                
                 ctx.font = `bold ${fontSize}px "Segoe UI"`;
-                const lines = [`📸 ${timeText}`, `📍 ${locText}`];
                 
-                let maxW = 0;
-                lines.forEach(l => { maxW = Math.max(maxW, ctx.measureText(l).width); });
-                const pad = fontSize * 0.8; // Padding juga diperbesar agar proporsional
-                const boxW = maxW + pad * 2;
-                const boxH = (fontSize * 1.6 * lines.length) + pad; // Tinggi box disesuaikan
-                const x = canvas.width - boxW - 15;
-                const y = canvas.height - boxH - 15;
+                // Siapkan teks watermark
+                const timePrefix = "📸 ";
+                const locPrefix = "📍 ";
                 
-                if (x > 0 && y > 0) {
-                    ctx.fillStyle = 'rgba(0,0,0,0.7)';
-                    ctx.fillRect(x, y, boxW, boxH);
-                    ctx.fillStyle = '#fff';
-                    ctx.shadowBlur = 2;
-                    ctx.shadowColor = 'rgba(0,0,0,0.5)';
-                    lines.forEach((line, i) => {
-                        ctx.fillText(line, x + pad, y + pad + (fontSize * 1.6 * i) + fontSize * 0.8);
-                    });
-                    ctx.shadowBlur = 0;
+                // Potong teks lokasi jika terlalu panjang
+                let displayLocText = locText;
+                const maxCharsPerLine = Math.floor(canvas.width / (fontSize * 0.65));
+                if (displayLocText.length > maxCharsPerLine) {
+                    displayLocText = displayLocText.substring(0, maxCharsPerLine - 3) + "...";
                 }
+                
+                const lines = [`${timePrefix}${timeText}`, `${locPrefix}${displayLocText}`];
+                
+                // Hitung dimensi box
+                let maxW = 0;
+                lines.forEach(l => { 
+                    const metrics = ctx.measureText(l);
+                    maxW = Math.max(maxW, metrics.width); 
+                });
+                
+                const padding = fontSize * 0.7;
+                const boxW = maxW + padding * 2;
+                const boxH = (fontSize * 1.5 * lines.length) + padding;
+                
+                // Posisi di kanan bawah
+                let x = canvas.width - boxW - 15;
+                let y = canvas.height - boxH - 15;
+                
+                // Jika posisi negatif (gambar terlalu kecil), sesuaikan
+                if (x < 5) x = 5;
+                if (y < 5) y = 5;
+                
+                // Gambar background box
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(x, y, boxW, boxH);
+                
+                // Gambar teks
+                ctx.fillStyle = '#FFFFFF';
+                ctx.shadowBlur = 2;
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+                
+                lines.forEach((line, i) => {
+                    const textY = y + padding + (fontSize * 1.5 * i) + fontSize * 0.75;
+                    ctx.fillText(line, x + padding, textY);
+                });
+                
+                ctx.shadowBlur = 0;
+                
+                // Konversi ke blob
                 canvas.toBlob(resolve, 'image/jpeg', 0.92);
             };
             img.src = imgDataURL;
@@ -922,13 +953,13 @@
                 const ts = getTimestamp();
                 let locShort = "Lokasi tidak tersedia";
                 if (currentLocation.lat && currentLocation.lng) {
-                    locShort = currentLocation.address !== "Mengambil lokasi..." ? currentLocation.address.substring(0, 50) : `${currentLocation.lat.toFixed(5)}, ${currentLocation.lng.toFixed(5)}`;
+                    locShort = currentLocation.address !== "Mengambil lokasi..." ? currentLocation.address : `${currentLocation.lat.toFixed(5)}, ${currentLocation.lng.toFixed(5)}`;
                 }
                 const watermarked = await addWatermark(originalImageDataURL, ts.full, locShort);
                 watermarkedBlob = watermarked;
                 const url = URL.createObjectURL(watermarked);
                 imagePreview.src = url;
-                statusMsg.innerHTML = '✅ Gambar siap dengan watermark lebih besar';
+                statusMsg.innerHTML = '✅ Gambar siap dengan watermark lebih besar!';
                 statusMsg.classList.add('success');
                 setTimeout(() => statusMsg.classList.remove('success'), 1500);
             };
@@ -1025,7 +1056,6 @@
     
     // Deteksi perubahan orientasi device (optional)
     window.addEventListener('resize', () => {
-        // Tidak mengubah layout pilihan user, hanya untuk logging
         console.log('Window resized, current layout mode:', layoutMode);
     });
 </script>
