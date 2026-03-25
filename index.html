@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <meta name="google" content="notranslate">
-    <meta name="format-detection" content="telephone=no">
-    <title>Timestamp Report - Lokasi Manual</title>
+    <title>Timestamp Report</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -31,24 +29,6 @@
             border-radius: 32px;
             padding: 24px 20px 32px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        /* Warning HTTPS */
-        .https-warning {
-            background: #fef3c7;
-            border-left: 4px solid #f59e0b;
-            padding: 12px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            font-size: 12px;
-        }
-        .https-warning i {
-            color: #f59e0b;
-            margin-right: 8px;
-        }
-        .https-warning a {
-            color: #f59e0b;
-            font-weight: bold;
         }
 
         .header {
@@ -141,7 +121,6 @@
             border-radius: 20px;
             font-size: 0.75rem;
             word-break: break-all;
-            flex-wrap: wrap;
         }
         .refresh-loc {
             background: rgba(255,255,255,0.2);
@@ -150,55 +129,6 @@
             font-size: 10px;
             cursor: pointer;
             margin-left: auto;
-        }
-
-        /* Input Lokasi Manual */
-        .manual-location {
-            background: #f1f5f9;
-            border-radius: 20px;
-            padding: 12px;
-            margin-bottom: 16px;
-        }
-        .manual-location h4 {
-            font-size: 12px;
-            margin-bottom: 8px;
-            color: #1f2e3a;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .location-input-group {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .location-input-group input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #cbd5e1;
-            border-radius: 40px;
-            font-size: 12px;
-            text-align: center;
-        }
-        .btn-location-manual {
-            background: #3b82f6;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 40px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .use-current-location {
-            background: #10b981;
-            width: 100%;
-            margin-top: 8px;
-            padding: 10px;
-            border-radius: 40px;
-            border: none;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
         }
 
         .btn-group {
@@ -211,22 +141,25 @@
             border: none;
             padding: 14px;
             border-radius: 60px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: bold;
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
             cursor: pointer;
             transition: 0.2s;
         }
         .btn-primary:active { transform: scale(0.97); }
-        .btn-wa-text {
-            background: #128C7E;
+        .btn-copy {
+            background: #10b981;
         }
         .btn-wa {
             background: #25D366;
+        }
+        .btn-wa-text {
+            background: #128C7E;
         }
 
         .msg-preview {
@@ -241,26 +174,6 @@
             overflow-y: auto;
         }
 
-        .status {
-            margin-top: 16px;
-            font-size: 0.7rem;
-            text-align: center;
-            padding: 8px;
-            border-radius: 40px;
-            background: #eef2ff;
-            color: #1f3a5f;
-        }
-        .status.success { background: #d1fae5; color: #065f46; }
-        .status.error { background: #fee2e2; color: #991b1b; }
-        .status.warning { background: #fef3c7; color: #92400e; }
-
-        footer {
-            text-align: center;
-            font-size: 0.6rem;
-            color: #94a3b8;
-            margin-top: 20px;
-        }
-        
         .manual-box {
             margin-top: 16px;
             background: #fffbeb;
@@ -290,18 +203,29 @@
             margin-top: 8px;
             cursor: pointer;
         }
+
+        .status {
+            margin-top: 16px;
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 8px;
+            border-radius: 40px;
+            background: #eef2ff;
+            color: #1f3a5f;
+        }
+        .status.success { background: #d1fae5; color: #065f46; }
+        .status.error { background: #fee2e2; color: #991b1b; }
+
+        footer {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #94a3b8;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 <div class="card">
-    <!-- Peringatan HTTPS -->
-    <div class="https-warning" id="httpsWarning" style="display: none;">
-        <i class="fas fa-exclamation-triangle"></i>
-        <strong>⚠️ Koneksi Tidak Aman</strong><br>
-        Lokasi otomatis tidak dapat diakses karena halaman ini bukan HTTPS.<br>
-        <span id="httpsSolution">📱 <strong>Solusi:</strong> Gunakan input lokasi manual di bawah atau buka halaman ini via HTTPS.</span>
-    </div>
-
     <div class="header">
         <i class="fas fa-camera-retro"></i>
         <h1>Timestamp Report</h1>
@@ -331,22 +255,6 @@
         </div>
     </div>
 
-    <!-- Input Lokasi Manual (Solusi untuk HTTP) -->
-    <div class="manual-location" id="manualLocationBox">
-        <h4><i class="fas fa-edit"></i> Atau Masukkan Lokasi Manual:</h4>
-        <div class="location-input-group">
-            <input type="text" id="manualLat" placeholder="Latitude (contoh: -6.200000)" value="">
-            <input type="text" id="manualLng" placeholder="Longitude (contoh: 106.816666)" value="">
-            <button class="btn-location-manual" id="setManualLocationBtn"><i class="fas fa-check"></i> Set</button>
-        </div>
-        <button class="use-current-location" id="useCurrentLocationBtn">
-            <i class="fas fa-location-arrow"></i> Gunakan Lokasi Saat Ini (Coba Lagi)
-        </button>
-        <p style="font-size: 10px; margin-top: 8px; color: #6b7280; text-align: center;">
-            💡 Tips: Buka Google Maps, tekan lama pada lokasi → copy koordinat
-        </p>
-    </div>
-
     <!-- Dua Tombol Utama -->
     <div class="btn-group">
         <button class="btn-primary btn-wa-text" id="sendTextBtn"><i class="fab fa-whatsapp"></i> Kirim Teks ke WA</button>
@@ -368,23 +276,12 @@
 </div>
 
 <script>
-    // ==================== DETEKSI HTTPS ====================
-    const isHttps = window.location.protocol === 'https:';
-    const httpsWarning = document.getElementById('httpsWarning');
-    
-    if (!isHttps) {
-        httpsWarning.style.display = 'block';
-        document.getElementById('statusMsg').innerHTML = '⚠️ Koneksi tidak aman (HTTP). Gunakan input lokasi manual di bawah.';
-        document.getElementById('statusMsg').classList.add('warning');
-    }
-    
     // ==================== VARIABEL ====================
     let selectedImageFile = null;
     let originalImageDataURL = null;
     let watermarkedBlob = null;
-    let currentLocation = { lat: null, lng: null, address: "Lokasi tidak tersedia" };
+    let currentLocation = { lat: null, lng: null, address: "Mengambil lokasi..." };
     let currentMessage = "Menunggu data...";
-    let useManualLocation = false;
 
     // DOM Elements
     const galleryBtn = document.getElementById('galleryBtn');
@@ -402,10 +299,6 @@
     const displayDate = document.getElementById('displayDate');
     const displayLocation = document.getElementById('displayLocation');
     const refreshGeoBtn = document.getElementById('refreshGeoBtn');
-    const manualLat = document.getElementById('manualLat');
-    const manualLng = document.getElementById('manualLng');
-    const setManualLocationBtn = document.getElementById('setManualLocationBtn');
-    const useCurrentLocationBtn = document.getElementById('useCurrentLocationBtn');
 
     // ==================== FUNGSI WAKTU ====================
     function getTimestamp() {
@@ -443,7 +336,7 @@
             const lat = currentLocation.lat.toFixed(6);
             const lng = currentLocation.lng.toFixed(6);
             mapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
-            locText = currentLocation.address !== "Lokasi tidak tersedia" ? currentLocation.address : `${lat}, ${lng}`;
+            locText = currentLocation.address !== "Mengambil lokasi..." ? currentLocation.address : `${lat}, ${lng}`;
         }
         
         currentMessage = `📸 *TIMESTAMP REPORT*\n━━━━━━━━━━━━━━━━━━━\n🕒 *Waktu:* ${ts.full}\n📍 *Lokasi:* ${locText}\n🗺️ *Maps:* ${mapsLink || "Tidak tersedia"}\n━━━━━━━━━━━━━━━━━━━\n✅ Laporan via Timestamp Report`;
@@ -452,134 +345,67 @@
         manualText.value = currentMessage;
     }
 
-    // ==================== UPDATE TAMPILAN LOKASI ====================
-    function updateLocationDisplay() {
-        if (currentLocation.lat && currentLocation.lng) {
-            const lat = currentLocation.lat.toFixed(6);
-            const lng = currentLocation.lng.toFixed(6);
-            let displayText = currentLocation.address !== "Lokasi tidak tersedia" ? currentLocation.address : `${lat}, ${lng}`;
-            if (displayText.length > 40) displayText = displayText.substring(0, 37) + '...';
-            displayLocation.innerHTML = `<i class="fas fa-location-dot"></i> ${displayText}`;
-            statusMsg.innerHTML = useManualLocation ? '✅ Lokasi manual digunakan' : '✅ Lokasi aktif';
-            statusMsg.classList.add('success');
-            setTimeout(() => statusMsg.classList.remove('success'), 2000);
-        } else {
-            displayLocation.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Lokasi tidak tersedia';
-        }
-        updateMessage();
-    }
-
-    // ==================== AMBIL ALAMAT DARI KOORDINAT ====================
-    async function fetchAddress(lat, lng) {
-        try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=id`, {
-                headers: { 'User-Agent': 'TimestampApp/1.0' }
-            });
-            const data = await response.json();
-            if (data && data.display_name) {
-                let addr = data.display_name;
-                if (addr.length > 45) addr = addr.substring(0, 42) + '...';
-                currentLocation.address = addr;
-            } else {
-                currentLocation.address = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-            }
-        } catch (err) {
-            currentLocation.address = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-        }
-        updateLocationDisplay();
-    }
-
-    // ==================== SET LOKASI MANUAL ====================
-    function setManualLocation() {
-        let lat = parseFloat(manualLat.value);
-        let lng = parseFloat(manualLng.value);
-        
-        if (isNaN(lat) || isNaN(lng)) {
-            statusMsg.innerHTML = '❌ Masukkan latitude dan longitude yang valid';
-            statusMsg.classList.add('error');
-            setTimeout(() => statusMsg.classList.remove('error'), 2000);
-            return;
-        }
-        
-        if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-            statusMsg.innerHTML = '❌ Koordinat tidak valid (lat: -90~90, lng: -180~180)';
-            statusMsg.classList.add('error');
-            setTimeout(() => statusMsg.classList.remove('error'), 2000);
-            return;
-        }
-        
-        currentLocation.lat = lat;
-        currentLocation.lng = lng;
-        useManualLocation = true;
-        fetchAddress(lat, lng);
-        
-        statusMsg.innerHTML = '✅ Lokasi manual diset!';
-        statusMsg.classList.add('success');
-        setTimeout(() => statusMsg.classList.remove('success'), 2000);
-    }
-    
-    setManualLocationBtn.addEventListener('click', setManualLocation);
-
-    // ==================== GET LOKASI OTOMATIS (DENGAN FALLBACK) ====================
-    function getAutoLocation() {
-        if (!navigator.geolocation) {
-            statusMsg.innerHTML = '❌ Browser tidak support GPS. Gunakan lokasi manual.';
-            statusMsg.classList.add('error');
-            return;
-        }
-        
+    // ==================== LOKASI (DIPAKSA) ====================
+    function forceGetLocation() {
         statusMsg.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Meminta izin lokasi...';
         statusMsg.classList.remove('success', 'error');
         
-        let timeoutId = setTimeout(() => {
-            if (!currentLocation.lat) {
-                statusMsg.innerHTML = '⏰ Timeout. Gunakan input lokasi manual di bawah.';
-                statusMsg.classList.add('warning');
-            }
-        }, 10000);
+        if (!navigator.geolocation) {
+            displayLocation.innerHTML = 'GPS tidak support';
+            updateMessage();
+            return;
+        }
         
         navigator.geolocation.getCurrentPosition(
             (pos) => {
-                clearTimeout(timeoutId);
                 currentLocation.lat = pos.coords.latitude;
                 currentLocation.lng = pos.coords.longitude;
-                useManualLocation = false;
-                fetchAddress(currentLocation.lat, currentLocation.lng);
-                statusMsg.innerHTML = '✅ Lokasi otomatis berhasil!';
+                displayLocation.innerHTML = `<i class="fas fa-location-dot"></i> ${currentLocation.lat.toFixed(5)}, ${currentLocation.lng.toFixed(5)}`;
+                
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentLocation.lat}&lon=${currentLocation.lng}&accept-language=id`, {
+                    headers: { 'User-Agent': 'TimestampApp/1.0' }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.display_name) {
+                        let addr = data.display_name;
+                        if (addr.length > 45) addr = addr.substring(0, 42) + '...';
+                        currentLocation.address = addr;
+                        displayLocation.innerHTML = `<i class="fas fa-location-dot"></i> ${addr}`;
+                    }
+                    updateMessage();
+                })
+                .catch(() => { updateMessage(); });
+                
+                statusMsg.innerHTML = '✅ Lokasi siap';
                 statusMsg.classList.add('success');
                 setTimeout(() => statusMsg.classList.remove('success'), 2000);
+                updateMessage();
             },
             (err) => {
-                clearTimeout(timeoutId);
                 console.error("Geo error:", err);
-                let errorMsg = "";
-                if (err.code === 1) {
-                    errorMsg = "⚠️ Izin ditolak. Gunakan input lokasi manual di bawah.";
-                    if (!isHttps) {
-                        errorMsg = "⚠️ HTTPS diperlukan untuk lokasi otomatis. Gunakan input manual di bawah.";
-                    }
-                } else if (err.code === 2) {
-                    errorMsg = "Lokasi tidak tersedia. Gunakan input manual.";
-                } else if (err.code === 3) {
-                    errorMsg = "Timeout. Gunakan input manual.";
-                }
+                let errorMsg = "Izin lokasi ditolak";
+                if (err.code === 1) errorMsg = "⚠️ Izin ditolak. Buka Pengaturan → Aplikasi → Chrome → Izin → Lokasi → Izinkan";
+                else if (err.code === 2) errorMsg = "Lokasi tidak tersedia";
+                else if (err.code === 3) errorMsg = "Timeout, coba lagi";
+                
+                displayLocation.innerHTML = `⚠️ ${errorMsg.substring(0, 40)}`;
                 statusMsg.innerHTML = errorMsg;
                 statusMsg.classList.add('error');
-                displayLocation.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Gunakan input manual di bawah';
+                updateMessage();
+                
+                if (err.code === 1) {
+                    setTimeout(() => {
+                        statusMsg.innerHTML = '💡 Klik refresh lokasi untuk coba lagi setelah mengaktifkan izin';
+                    }, 3000);
+                }
             },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
         );
     }
     
-    // Panggil lokasi otomatis dengan delay
-    setTimeout(() => {
-        if (!currentLocation.lat) {
-            getAutoLocation();
-        }
-    }, 500);
-    
-    refreshGeoBtn.addEventListener('click', getAutoLocation);
-    useCurrentLocationBtn.addEventListener('click', getAutoLocation);
+    forceGetLocation();
+    refreshGeoBtn.addEventListener('click', forceGetLocation);
 
     // ==================== WATERMARK GAMBAR ====================
     async function addWatermark(imgDataURL, timeText, locText) {
@@ -646,7 +472,7 @@
                 const ts = getTimestamp();
                 let locShort = "Lokasi tidak tersedia";
                 if (currentLocation.lat && currentLocation.lng) {
-                    locShort = currentLocation.address !== "Lokasi tidak tersedia" ? currentLocation.address.substring(0, 40) : `${currentLocation.lat.toFixed(5)}, ${currentLocation.lng.toFixed(5)}`;
+                    locShort = currentLocation.address !== "Mengambil lokasi..." ? currentLocation.address.substring(0, 40) : `${currentLocation.lat.toFixed(5)}, ${currentLocation.lng.toFixed(5)}`;
                 }
                 const watermarked = await addWatermark(originalImageDataURL, ts.full, locShort);
                 watermarkedBlob = watermarked;
@@ -664,7 +490,7 @@
     galleryBtn.addEventListener('click', () => triggerImage(false));
     cameraBtn.addEventListener('click', () => triggerImage(true));
 
-    // ==================== KIRIM TEKS KE WA ====================
+    // ==================== KIRIM TEKS KE WA (BARU) ====================
     function sendTextToWA() {
         if (!currentMessage || currentMessage === "Menunggu data...") {
             statusMsg.innerHTML = '⏳ Data laporan belum siap';
@@ -700,7 +526,7 @@
             const ts = getTimestamp();
             let locShort = "Lokasi tidak tersedia";
             if (currentLocation.lat && currentLocation.lng) {
-                locShort = currentLocation.address !== "Lokasi tidak tersedia" ? currentLocation.address : `${currentLocation.lat.toFixed(5)}, ${currentLocation.lng.toFixed(5)}`;
+                locShort = currentLocation.address !== "Mengambil lokasi..." ? currentLocation.address : `${currentLocation.lat.toFixed(5)}, ${currentLocation.lng.toFixed(5)}`;
             }
             
             if (!watermarkedBlob && originalImageDataURL) {
@@ -718,7 +544,7 @@
                 });
                 statusMsg.innerHTML = '✅ Berhasil dikirim!';
             } else {
-                const waUrl = `https://wa.me/?text=${encodeURIComponent(currentMessage + "\n\n📸 Gambar dengan watermark sudah siap di preview di atas")}`;
+                const waUrl = `https://wa.me/?text=${encodeURIComponent(currentMessage + "\n\n📸 *Gambar dengan watermark sudah siap di preview di atas*")}`;
                 window.open(waUrl, '_blank');
                 statusMsg.innerHTML = '📱 WhatsApp terbuka, kirim gambar dari preview';
             }
@@ -735,7 +561,7 @@
     
     sendImageBtn.addEventListener('click', sendImageToWA);
 
-    // ==================== COPY LAPORAN ====================
+    // ==================== COPY LAPORAN (FALLBACK) ====================
     async function copyReport() {
         if (!currentMessage || currentMessage === "Menunggu data...") {
             statusMsg.innerHTML = '⏳ Data belum siap';
