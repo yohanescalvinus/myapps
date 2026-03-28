@@ -60,15 +60,54 @@
             --accent-wa-text: #128C7E;
         }
 
-        /* Main Card */
+        /* Main Card - Responsif */
         .card {
-            max-width: 500px;
             width: 100%;
             background: var(--bg-card);
             border-radius: 28px;
             padding: 20px;
             box-shadow: var(--shadow);
             transition: all 0.3s ease;
+        }
+
+        /* Default Portrait Mode */
+        .card.portrait {
+            max-width: 500px;
+        }
+
+        /* Landscape Mode */
+        .card.landscape {
+            max-width: 900px;
+        }
+
+        /* ========== LAYOUT RESPONSIF ========== */
+        /* Portrait: layout vertikal */
+        .card.portrait .main-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Landscape: layout horizontal 2 kolom */
+        .card.landscape .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* Landscape: left section dan right section */
+        .card.landscape .left-section {
+            grid-column: 1;
+        }
+
+        .card.landscape .right-section {
+            grid-column: 2;
+        }
+
+        /* Landscape: full width untuk preview pesan */
+        .card.landscape .full-width {
+            grid-column: 1 / -1;
         }
 
         /* Header */
@@ -117,9 +156,11 @@
             display: flex;
             gap: 12px;
             margin-bottom: 16px;
+            flex-wrap: wrap;
         }
         .image-actions button {
             flex: 1;
+            min-width: 120px;
             background: var(--btn-bg);
             border: none;
             padding: 12px;
@@ -246,9 +287,11 @@
             display: flex;
             gap: 12px;
             margin-bottom: 16px;
+            flex-wrap: wrap;
         }
         .actions button {
             flex: 1;
+            min-width: 120px;
             border: none;
             padding: 12px;
             border-radius: 60px;
@@ -297,9 +340,15 @@
         /* Footer */
         .footer {
             text-align: center;
-            font-size: 0.55rem;
+            font-size: 0.6rem;
             color: var(--text-muted);
             margin-top: 16px;
+            padding: 8px;
+            line-height: 1.4;
+        }
+        .footer i {
+            color: #e74c3c;
+            margin: 0 2px;
         }
 
         /* Modal Map */
@@ -362,73 +411,143 @@
         .cancel-loc { background: var(--btn-bg); color: var(--text); }
         .coord-info { font-size: 0.65rem; color: var(--text-muted); }
 
-        /* Hidden */
-        .hidden { display: none; }
+        /* Responsif untuk mobile landscape */
+        @media (max-width: 767px) and (orientation: landscape) {
+            body {
+                padding: 12px;
+            }
+            .card {
+                padding: 16px;
+            }
+            .card.landscape .main-grid {
+                gap: 16px;
+            }
+            .preview img {
+                max-height: 140px;
+            }
+            .time {
+                font-size: 1.4rem;
+            }
+            .image-actions button,
+            .actions button {
+                padding: 8px;
+                font-size: 0.75rem;
+            }
+            .notes textarea {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Responsif untuk tablet portrait */
+        @media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
+            .card.portrait {
+                max-width: 550px;
+            }
+        }
+
+        /* Responsif untuk tablet landscape */
+        @media (min-width: 768px) and (max-width: 1023px) and (orientation: landscape) {
+            .card.landscape {
+                max-width: 95%;
+            }
+            .preview img {
+                max-height: 180px;
+            }
+        }
+
+        /* Responsif untuk desktop */
+        @media (min-width: 1024px) {
+            .card.portrait {
+                max-width: 550px;
+            }
+            .card.landscape {
+                max-width: 1000px;
+            }
+            .preview img {
+                max-height: 250px;
+            }
+        }
     </style>
 </head>
 <body class="dark">
-<div class="card">
-    <!-- Header -->
-    <div class="header">
-        <h1>📸 Timestamp</h1>
-        <p>foto + waktu + lokasi</p>
-    </div>
+<div class="card portrait" id="mainCard">
+    <div class="main-grid">
+        <!-- LEFT SECTION -->
+        <div class="left-section">
+            <!-- Header -->
+            <div class="header">
+                <h1>📸 Timestamp</h1>
+                <p>foto + waktu + lokasi</p>
+            </div>
 
-    <!-- Settings -->
-    <div class="settings">
-        <button id="layoutBtn"><i class="fas fa-mobile-alt"></i> Portrait</button>
-        <button id="timeFormatBtn"><i class="fas fa-clock"></i> 24H</button>
-        <button id="themeBtn"><i class="fas fa-moon"></i> Dark</button>
-    </div>
+            <!-- Settings -->
+            <div class="settings">
+                <button id="layoutBtn"><i class="fas fa-mobile-alt"></i> Portrait</button>
+                <button id="timeFormatBtn"><i class="fas fa-clock"></i> 24H</button>
+                <button id="themeBtn"><i class="fas fa-moon"></i> Dark</button>
+            </div>
 
-    <!-- Image Actions -->
-    <div class="image-actions">
-        <button id="galleryBtn"><i class="fas fa-images"></i> Galeri</button>
-        <button id="cameraBtn"><i class="fas fa-camera"></i> Kamera</button>
-    </div>
+            <!-- Image Actions -->
+            <div class="image-actions">
+                <button id="galleryBtn"><i class="fas fa-images"></i> Galeri</button>
+                <button id="cameraBtn"><i class="fas fa-camera"></i> Kamera</button>
+            </div>
 
-    <!-- Notes -->
-    <div class="notes">
-        <label><i class="fas fa-pen"></i> Catatan</label>
-        <textarea id="notesInput" rows="2" placeholder="Tambahkan catatan..."></textarea>
-        <div class="char-count"><span id="charCount">0</span>/200</div>
-    </div>
+            <!-- Notes -->
+            <div class="notes">
+                <label><i class="fas fa-pen"></i> Catatan</label>
+                <textarea id="notesInput" rows="2" placeholder="Tambahkan catatan..."></textarea>
+                <div class="char-count"><span id="charCount">0</span>/200</div>
+            </div>
 
-    <!-- Preview -->
-    <div class="preview">
-        <img id="previewImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14h-2v-4H7v-2h2V7h2v4h4v2h-4v4z'/%3E%3C/svg%3E" alt="Preview">
-        <div class="hint"><i class="fas fa-watermark"></i> watermark: catatan di atas, waktu & lokasi di bawah</div>
-    </div>
-
-    <!-- Info -->
-    <div class="info-card">
-        <div class="time">
-            <span id="time">--:--</span>
-            <span id="ampm" style="font-size:0.8rem;"></span>
+            <!-- Preview -->
+            <div class="preview">
+                <img id="previewImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14h-2v-4H7v-2h2V7h2v4h4v2h-4v4z'/%3E%3C/svg%3E" alt="Preview">
+                <div class="hint"><i class="fas fa-watermark"></i> watermark: catatan di atas, waktu & lokasi di bawah</div>
+            </div>
         </div>
-        <div class="date" id="date">---, -- --- ----</div>
-        <div class="location">
-            <i class="fas fa-map-marker-alt"></i>
-            <span id="locationText">Mengambil lokasi...</span>
-            <div class="location-actions">
-                <span id="pickLocationBtn"><i class="fas fa-map"></i> Pilih</span>
-                <span id="refreshLocationBtn"><i class="fas fa-sync-alt"></i></span>
+
+        <!-- RIGHT SECTION -->
+        <div class="right-section">
+            <!-- Info -->
+            <div class="info-card">
+                <div class="time">
+                    <span id="time">--:--</span>
+                    <span id="ampm" style="font-size:0.8rem;"></span>
+                </div>
+                <div class="date" id="date">---, -- --- ----</div>
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="locationText">Mengambil lokasi...</span>
+                    <div class="location-actions">
+                        <span id="pickLocationBtn"><i class="fas fa-map"></i> Pilih</span>
+                        <span id="refreshLocationBtn"><i class="fas fa-sync-alt"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="actions">
+                <button id="sendTextBtn" class="btn-text"><i class="fab fa-whatsapp"></i> Teks</button>
+                <button id="sendImageBtn" class="btn-image"><i class="fas fa-camera"></i> Gambar</button>
+            </div>
+        </div>
+
+        <!-- FULL WIDTH SECTION -->
+        <div class="full-width">
+            <!-- Message Preview -->
+            <div class="message-preview" id="messagePreview">Menunggu data...</div>
+
+            <!-- Status -->
+            <div id="status" class="status"><i class="fas fa-location-dot"></i> Mengambil lokasi...</div>
+            
+            <!-- Footer -->
+            <div class="footer">
+                <i class="fas fa-heart"></i> Aplikasi ini Gratis tanpa ADS, gunakan dengan tepat dan Bijaksana! <i class="fas fa-hand-peace"></i><br>
+                share dan jadi berkat buat semua. <i class="fas fa-share-alt"></i>
             </div>
         </div>
     </div>
-
-    <!-- Action Buttons -->
-    <div class="actions">
-        <button id="sendTextBtn" class="btn-text"><i class="fab fa-whatsapp"></i> Teks</button>
-        <button id="sendImageBtn" class="btn-image"><i class="fas fa-camera"></i> Gambar</button>
-    </div>
-
-    <!-- Message Preview -->
-    <div class="message-preview" id="messagePreview">Menunggu data...</div>
-
-    <!-- Status -->
-    <div id="status" class="status"><i class="fas fa-location-dot"></i> Mengambil lokasi...</div>
-    <div class="footer">klik galeri/kamera → tambah catatan → kirim</div>
 </div>
 
 <!-- Map Modal -->
@@ -467,6 +586,7 @@
         let tempLocation = null;
         
         // DOM
+        const mainCard = document.getElementById('mainCard');
         const galleryBtn = document.getElementById('galleryBtn');
         const cameraBtn = document.getElementById('cameraBtn');
         const previewImg = document.getElementById('previewImg');
@@ -485,7 +605,6 @@
         const themeBtn = document.getElementById('themeBtn');
         const notesInput = document.getElementById('notesInput');
         const charCountSpan = document.getElementById('charCount');
-        const card = document.querySelector('.card');
         
         // Modal
         const mapModal = document.getElementById('mapModal');
@@ -830,12 +949,25 @@
             if (selectedFile && originalDataURL) regenerateWatermark();
         }
         
-        // ========== Settings ==========
+        // ========== Layout Settings ==========
         function setLayout(mode) {
             layoutMode = mode;
-            layoutBtn.innerHTML = mode === 'portrait' ? '<i class="fas fa-mobile-alt"></i> Portrait' : '<i class="fas fa-tablet-alt"></i> Landscape';
-            card.style.maxWidth = mode === 'portrait' ? '500px' : '800px';
+            // Update class pada card
+            mainCard.classList.remove('portrait', 'landscape');
+            mainCard.classList.add(mode);
+            
+            // Update tombol
+            if (mode === 'portrait') {
+                layoutBtn.innerHTML = '<i class="fas fa-mobile-alt"></i> Portrait';
+            } else {
+                layoutBtn.innerHTML = '<i class="fas fa-tablet-alt"></i> Landscape';
+            }
             localStorage.setItem('layout', mode);
+            
+            // Trigger resize untuk map jika perlu
+            setTimeout(() => {
+                if (map) map.invalidateSize();
+            }, 100);
         }
         
         function toggleLayout() {
@@ -847,6 +979,7 @@
             timeFormatBtn.innerHTML = `<i class="fas fa-clock"></i> ${timeFormat === "24" ? "24H" : "12H"}`;
             localStorage.setItem('timeFormat', timeFormat);
             updateTime();
+            if (selectedFile && originalDataURL) regenerateWatermark();
         }
         
         function toggleTheme() {
@@ -858,15 +991,18 @@
         
         // ========== Init ==========
         function init() {
+            // Theme
             let savedTheme = localStorage.getItem('theme');
             if (savedTheme) theme = savedTheme;
             document.body.className = theme;
             themeBtn.innerHTML = theme === 'dark' ? '<i class="fas fa-moon"></i> Dark' : '<i class="fas fa-sun"></i> Light';
             
+            // Layout
             let savedLayout = localStorage.getItem('layout');
-            if (savedLayout) setLayout(savedLayout);
+            if (savedLayout === 'landscape') setLayout('landscape');
             else setLayout('portrait');
             
+            // Time Format
             let savedTime = localStorage.getItem('timeFormat');
             if (savedTime) {
                 timeFormat = savedTime;
