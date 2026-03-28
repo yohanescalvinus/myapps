@@ -738,7 +738,7 @@
             <!-- Notes Section -->
             <div class="notes-section">
                 <div class="notes-label">
-                    <i class="fas fa-pen-alt"></i> <span>Catatan (opsional)</span>
+                    <i class="fas fa-pen-alt"></i> <span>Catatan (opsional) - akan muncul di ATAS watermark timestamp</span>
                 </div>
                 <textarea id="notesInput" class="notes-textarea" rows="2" placeholder="Tambahkan catatan untuk laporan... (maks 200 karakter)"></textarea>
                 <div class="char-counter"><span id="charCount">0</span> / 200</div>
@@ -747,7 +747,7 @@
             <!-- Preview Gambar -->
             <div class="preview">
                 <img id="imagePreview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14h-2v-4H7v-2h2V7h2v4h4v2h-4v4z'/%3E%3C/svg%3E" alt="Preview">
-                <div class="preview-text"><i class="fas fa-watermark"></i> Watermark terpisah: catatan di atas, timestamp di bawah</div>
+                <div class="preview-text"><i class="fas fa-watermark"></i> Watermark: catatan di ATAS, timestamp di BAWAH</div>
             </div>
         </div>
 
@@ -790,7 +790,7 @@
             </div>
 
             <div id="statusMsg" class="status"><i class="fas fa-location-dot"></i> Meminta izin lokasi...</div>
-            <footer>Ambil gambar → Kirim teks atau kirim gambar+teks ke WhatsApp | Catatan akan muncul sebagai watermark terpisah</footer>
+            <footer>Ambil gambar → Kirim teks atau kirim gambar+teks ke WhatsApp | Catatan akan muncul di ATAS watermark timestamp</footer>
         </div>
     </div>
 </div>
@@ -1175,78 +1175,7 @@
             }
         }
 
-        // ==================== WATERMARK (dua box terpisah) ====================
-        async function addWatermarkWithNotes(imgDataURL, timeText, locText, notes) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    
-                    const fontSize = Math.max(12, Math.floor(canvas.width / 30));
-                    ctx.font = `bold ${fontSize}px "Segoe UI"`;
-                    
-                    // Garis untuk timestamp
-                    const timestampLines = [`📸 ${timeText}`, `📍 ${locText}`];
-                    
-                    // Hitung dimensi kedua box
-                    let notesLines = [];
-                    let notesBoxHeight = 0;
-                    let timestampBoxHeight = 0;
-                    const pad = fontSize * 0.6;
-                    
-                    if (notes && notes.trim() !== "") {
-                        // Bungkus teks catatan agar tidak terlalu panjang
-                        const maxWidth = canvas.width * 0.6; // batas lebar box 60% dari canvas
-                        notesLines = wrapText(ctx, notes, maxWidth);
-                        const notesBoxWidth = Math.min(canvas.width * 0.7, getMaxTextWidth(ctx, notesLines) + pad * 2);
-                        notesBoxHeight = (fontSize * 1.4 * notesLines.length) + pad;
-                        // Draw notes box di pojok kanan bawah, di atas timestamp
-                        const notesX = canvas.width - notesBoxWidth - 10;
-                        const notesY = canvas.height - (timestampBoxHeight + notesBoxHeight) - 20;
-                        if (notesX > 0 && notesY > 0) {
-                            ctx.fillStyle = 'rgba(0,0,0,0.65)';
-                            ctx.fillRect(notesX, notesY, notesBoxWidth, notesBoxHeight);
-                            ctx.fillStyle = '#fff';
-                            ctx.shadowBlur = 2;
-                            notesLines.forEach((line, i) => {
-                                ctx.fillText(line, notesX + pad, notesY + pad + (fontSize * 1.4 * i) + fontSize * 0.7);
-                            });
-                            ctx.shadowBlur = 0;
-                        }
-                    }
-                    
-                    // Hitung timestamp box
-                    const timestampBoxWidth = getMaxTextWidth(ctx, timestampLines) + pad * 2;
-                    timestampBoxHeight = (fontSize * 1.4 * timestampLines.length) + pad;
-                    const tsX = canvas.width - timestampBoxWidth - 10;
-                    let tsY = canvas.height - timestampBoxHeight - 10;
-                    if (notes && notes.trim() !== "") {
-                        // Jika ada notes, letakkan timestamp di bawah notes
-                        tsY = canvas.height - timestampBoxHeight - 10;
-                    }
-                    
-                    if (tsX > 0 && tsY > 0) {
-                        ctx.fillStyle = 'rgba(0,0,0,0.65)';
-                        ctx.fillRect(tsX, tsY, timestampBoxWidth, timestampBoxHeight);
-                        ctx.fillStyle = '#fff';
-                        ctx.shadowBlur = 2;
-                        timestampLines.forEach((line, i) => {
-                            ctx.fillText(line, tsX + pad, tsY + pad + (fontSize * 1.4 * i) + fontSize * 0.7);
-                        });
-                        ctx.shadowBlur = 0;
-                    }
-                    
-                    canvas.toBlob(resolve, 'image/jpeg', 0.9);
-                };
-                img.src = imgDataURL;
-            });
-        }
-        
-        // Helper: wrap text untuk catatan
+        // ==================== WATERMARK (Notes di ATAS, Timestamp di BAWAH) ====================
         function wrapText(ctx, text, maxWidth) {
             const words = text.split(' ');
             const lines = [];
@@ -1273,6 +1202,82 @@
                 if (w > max) max = w;
             }
             return max;
+        }
+        
+        async function addWatermarkWithNotes(imgDataURL, timeText, locText, notes) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const fontSize = Math.max(12, Math.floor(canvas.width / 30));
+                    ctx.font = `bold ${fontSize}px "Segoe UI"`;
+                    
+                    // Garis untuk timestamp
+                    const timestampLines = [`📸 ${timeText}`, `📍 ${locText}`];
+                    const pad = fontSize * 0.6;
+                    
+                    // Hitung dimensi timestamp box terlebih dahulu
+                    const timestampBoxWidth = getMaxTextWidth(ctx, timestampLines) + pad * 2;
+                    const timestampBoxHeight = (fontSize * 1.4 * timestampLines.length) + pad;
+                    
+                    let notesLines = [];
+                    let notesBoxHeight = 0;
+                    let notesBoxWidth = 0;
+                    
+                    // Hitung dimensi notes box jika ada
+                    if (notes && notes.trim() !== "") {
+                        const maxWidth = canvas.width * 0.6;
+                        notesLines = wrapText(ctx, notes, maxWidth);
+                        notesBoxWidth = Math.min(canvas.width * 0.7, getMaxTextWidth(ctx, notesLines) + pad * 2);
+                        notesBoxHeight = (fontSize * 1.4 * notesLines.length) + pad;
+                    }
+                    
+                    // Tentukan posisi: NOTES di ATAS, TIMESTAMP di BAWAH
+                    // Keduanya di pojok kanan bawah
+                    const margin = 10;
+                    
+                    // Posisi timestamp (bawah)
+                    const tsX = canvas.width - timestampBoxWidth - margin;
+                    const tsY = canvas.height - timestampBoxHeight - margin;
+                    
+                    // Posisi notes (di atas timestamp)
+                    let notesX = canvas.width - notesBoxWidth - margin;
+                    let notesY = tsY - notesBoxHeight - 5; // jarak 5px antara notes dan timestamp
+                    
+                    // Jika notes tidak ada, skip
+                    if (notes && notes.trim() !== "" && notesX > 0 && notesY > 0) {
+                        // Gambar box notes
+                        ctx.fillStyle = 'rgba(0,0,0,0.65)';
+                        ctx.fillRect(notesX, notesY, notesBoxWidth, notesBoxHeight);
+                        ctx.fillStyle = '#fff';
+                        ctx.shadowBlur = 2;
+                        notesLines.forEach((line, i) => {
+                            ctx.fillText(line, notesX + pad, notesY + pad + (fontSize * 1.4 * i) + fontSize * 0.7);
+                        });
+                        ctx.shadowBlur = 0;
+                    }
+                    
+                    // Gambar box timestamp (selalu ada)
+                    if (tsX > 0 && tsY > 0) {
+                        ctx.fillStyle = 'rgba(0,0,0,0.65)';
+                        ctx.fillRect(tsX, tsY, timestampBoxWidth, timestampBoxHeight);
+                        ctx.fillStyle = '#fff';
+                        ctx.shadowBlur = 2;
+                        timestampLines.forEach((line, i) => {
+                            ctx.fillText(line, tsX + pad, tsY + pad + (fontSize * 1.4 * i) + fontSize * 0.7);
+                        });
+                        ctx.shadowBlur = 0;
+                    }
+                    
+                    canvas.toBlob(resolve, 'image/jpeg', 0.9);
+                };
+                img.src = imgDataURL;
+            });
         }
         
         async function regenerateWatermark() {
@@ -1311,7 +1316,7 @@
                 reader.onload = async (ev) => {
                     originalImageDataURL = ev.target.result;
                     await regenerateWatermark();
-                    showStatus('✅ Gambar siap dengan watermark');
+                    showStatus('✅ Gambar siap dengan watermark (notes di atas, timestamp di bawah)');
                 };
                 reader.readAsDataURL(file);
             };
