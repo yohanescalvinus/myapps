@@ -41,6 +41,10 @@
             --accent: #10b981;
             --accent-wa: #25D366;
             --accent-wa-text: #128C7E;
+            --location-bg: rgba(0,0,0,0.05);
+            --location-text: #1e293b;
+            --location-action-bg: rgba(0,0,0,0.1);
+            --location-action-text: #1e293b;
         }
 
         /* Dark Theme */
@@ -58,6 +62,10 @@
             --accent: #10b981;
             --accent-wa: #25D366;
             --accent-wa-text: #128C7E;
+            --location-bg: rgba(255,255,255,0.1);
+            --location-text: #f1f5f9;
+            --location-action-bg: rgba(255,255,255,0.15);
+            --location-action-text: #f1f5f9;
         }
 
         /* Main Card - Responsif */
@@ -260,12 +268,20 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(0,0,0,0.05);
+            background: var(--location-bg);
             padding: 8px 12px;
             border-radius: 40px;
             font-size: 0.7rem;
             word-break: break-all;
             flex-wrap: wrap;
+            color: var(--location-text);
+        }
+        .location i {
+            color: var(--text-muted);
+        }
+        .location span {
+            color: var(--location-text);
+            flex: 1;
         }
         .location-actions {
             display: flex;
@@ -273,12 +289,17 @@
             margin-left: auto;
         }
         .location-actions span {
-            background: rgba(0,0,0,0.1);
+            background: var(--location-action-bg);
             padding: 4px 10px;
             border-radius: 40px;
             cursor: pointer;
             font-size: 0.65rem;
             white-space: nowrap;
+            color: var(--location-action-text);
+            transition: 0.2s;
+        }
+        .location-actions span:hover {
+            opacity: 0.8;
         }
         .location-actions span:active { transform: scale(0.95); }
 
@@ -597,7 +618,7 @@
         const timeSpan = document.getElementById('time');
         const ampmSpan = document.getElementById('ampm');
         const dateSpan = document.getElementById('date');
-        const locationText = document.getElementById('locationText');
+        const locationTextSpan = document.getElementById('locationText');
         const refreshLocationBtn = document.getElementById('refreshLocationBtn');
         const pickLocationBtn = document.getElementById('pickLocationBtn');
         const layoutBtn = document.getElementById('layoutBtn');
@@ -666,6 +687,8 @@
                 mapsLink = `https://maps.google.com/?q=${location.lat},${location.lng}`;
                 locText = location.address !== "Mengambil lokasi..." ? location.address : `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
                 if (location.isManual) locText += " (manual)";
+            } else if (location.address && location.address !== "Mengambil lokasi...") {
+                locText = location.address;
             }
             
             let notesText = notes.trim() ? `📝 ${notes.trim()}\n` : "";
@@ -674,6 +697,15 @@
         }
         
         // ========== Location ==========
+        function updateLocationDisplay() {
+            let displayText = location.address;
+            if (location.lat && location.lng && location.address === "Mengambil lokasi...") {
+                displayText = `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
+            }
+            if (location.isManual && location.lat) displayText += " (manual)";
+            locationTextSpan.textContent = displayText;
+        }
+        
         function fetchAddress(lat, lng, cb) {
             fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=id`, {
                 headers: { 'User-Agent': 'TimestampApp/1.0' }
@@ -687,12 +719,12 @@
                 } else {
                     location.address = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
                 }
-                locationText.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${location.address}`;
+                updateLocationDisplay();
                 if (cb) cb();
             })
             .catch(() => {
                 location.address = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-                locationText.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${location.address}`;
+                updateLocationDisplay();
                 if (cb) cb();
             });
             updateMessage();
@@ -703,12 +735,17 @@
             location.lat = lat;
             location.lng = lng;
             location.isManual = isManual;
+            location.address = "Mengambil alamat...";
+            updateLocationDisplay();
             fetchAddress(lat, lng);
         }
         
         function getGPS() {
             if (!navigator.geolocation) {
-                locationText.innerHTML = '⚠️ GPS tidak support';
+                location.address = "⚠️ GPS tidak support";
+                location.lat = null;
+                location.lng = null;
+                updateLocationDisplay();
                 showStatus('GPS tidak support', true);
                 return;
             }
@@ -719,9 +756,23 @@
                     showStatus('✅ Lokasi GPS berhasil');
                 },
                 (err) => {
-                    let msg = err.code === 1 ? 'Izin lokasi ditolak' : 'Lokasi tidak tersedia';
-                    locationText.innerHTML = `⚠️ ${msg}`;
+                    let msg = '';
+                    if (err.code === 1) {
+                        msg = '⚠️ Izin lokasi ditolak';
+                        location.address = msg;
+                    } else if (err.code === 2) {
+                        msg = '⚠️ Lokasi tidak tersedia';
+                        location.address = msg;
+                    } else {
+                        msg = '⚠️ Timeout, coba lagi';
+                        location.address = msg;
+                    }
+                    location.lat = null;
+                    location.lng = null;
+                    location.isManual = false;
+                    updateLocationDisplay();
                     showStatus(msg, true);
+                    updateMessage();
                 },
                 { enableHighAccuracy: true, timeout: 10000 }
             );
@@ -818,8 +869,10 @@
             
             let locShort = "Lokasi tidak tersedia";
             if (location.lat && location.lng) {
-                locShort = location.address !== "Mengambil lokasi..." ? location.address : `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
+                locShort = location.address !== "Mengambil lokasi..." && location.address !== "Mengambil alamat..." ? location.address : `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
                 if (location.isManual) locShort += " (manual)";
+            } else if (location.address && !location.address.includes("Mengambil")) {
+                locShort = location.address;
             }
             
             const watermarked = await addWatermark(originalDataURL, timeFull, dateFull, locShort, notes);
@@ -952,11 +1005,9 @@
         // ========== Layout Settings ==========
         function setLayout(mode) {
             layoutMode = mode;
-            // Update class pada card
             mainCard.classList.remove('portrait', 'landscape');
             mainCard.classList.add(mode);
             
-            // Update tombol
             if (mode === 'portrait') {
                 layoutBtn.innerHTML = '<i class="fas fa-mobile-alt"></i> Portrait';
             } else {
@@ -964,7 +1015,6 @@
             }
             localStorage.setItem('layout', mode);
             
-            // Trigger resize untuk map jika perlu
             setTimeout(() => {
                 if (map) map.invalidateSize();
             }, 100);
