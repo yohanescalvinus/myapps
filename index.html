@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Timestamp Report - Simple</title>
+    <title>Timestamp Report - Modern Minimalis</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Leaflet CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -15,96 +15,88 @@
             box-sizing: border-box;
         }
 
-        /* ========== THEME VARIABLES ========== */
+        /* ========== GLOBAL STYLES ========== */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            padding: 16px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 20px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: background 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background-attachment: fixed;
         }
 
-        /* Light Theme */
+        /* Light Theme - Modern Gradient */
         body.light {
-            background: #f5f7fb;
-            --bg-card: #ffffff;
-            --text: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --bg-preview: #f8fafc;
-            --bg-info: #f1f5f9;
-            --btn-bg: #f1f5f9;
-            --btn-hover: #e2e8f0;
-            --shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf2 100%);
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --bg-card-solid: #ffffff;
+            --text: #1a1f2e;
+            --text-secondary: #5a6e8a;
+            --border: rgba(0, 0, 0, 0.06);
+            --shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
             --accent: #10b981;
             --accent-wa: #25D366;
-            --accent-wa-text: #128C7E;
-            --location-bg: rgba(0,0,0,0.05);
-            --location-text: #1e293b;
-            --location-action-bg: rgba(0,0,0,0.1);
-            --location-action-text: #1e293b;
+            --accent-wa-text: #075e54;
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            --blur: blur(12px);
         }
 
-        /* Dark Theme */
+        /* Dark Theme - Modern Gradient */
         body.dark {
-            background: #0f172a;
-            --bg-card: #1e293b;
-            --text: #f1f5f9;
-            --text-muted: #94a3b8;
-            --border: #334155;
-            --bg-preview: #0f172a;
-            --bg-info: #334155;
-            --btn-bg: #334155;
-            --btn-hover: #475569;
-            --shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #0a0f1a 0%, #0f1420 100%);
+            --bg-card: rgba(18, 25, 45, 0.85);
+            --bg-card-solid: #12192d;
+            --text: #eef2ff;
+            --text-secondary: #8b9cc7;
+            --border: rgba(255, 255, 255, 0.08);
+            --shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
             --accent: #10b981;
             --accent-wa: #25D366;
             --accent-wa-text: #128C7E;
-            --location-bg: rgba(255,255,255,0.1);
-            --location-text: #f1f5f9;
-            --location-action-bg: rgba(255,255,255,0.15);
-            --location-action-text: #f1f5f9;
+            --bg-glass: rgba(18, 25, 45, 0.7);
+            --blur: blur(12px);
         }
 
-        /* Main Card - Responsif */
+        /* Main Card - Glassmorphism */
         .card {
             width: 100%;
             background: var(--bg-card);
-            border-radius: 28px;
-            padding: 20px;
+            backdrop-filter: var(--blur);
+            border-radius: 32px;
+            padding: 24px;
             box-shadow: var(--shadow);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
         }
 
-        /* Default Portrait Mode */
+        /* Portrait Mode */
         .card.portrait {
-            max-width: 500px;
+            max-width: 520px;
         }
 
         /* Landscape Mode */
         .card.landscape {
-            max-width: 900px;
+            max-width: 1000px;
         }
 
-        /* ========== LAYOUT RESPONSIF ========== */
-        /* Portrait: layout vertikal */
-        .card.portrait .main-grid {
+        /* ========== LAYOUT GRID ========== */
+        .main-grid {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
 
-        /* Landscape: layout horizontal 2 kolom */
         .card.landscape .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 24px;
             align-items: start;
         }
 
-        /* Landscape: left section dan right section */
         .card.landscape .left-section {
             grid-column: 1;
         }
@@ -113,39 +105,43 @@
             grid-column: 2;
         }
 
-        /* Landscape: full width untuk preview pesan */
         .card.landscape .full-width {
             grid-column: 1 / -1;
         }
 
-        /* Header */
+        /* ========== MODERN HEADER ========== */
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 8px;
         }
         .header h1 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: var(--text);
-            letter-spacing: -0.3px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
         }
         .header p {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 4px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            letter-spacing: 0.3px;
         }
 
-        /* Settings Row */
+        /* ========== SETTINGS BAR ========== */
         .settings {
             display: flex;
             justify-content: flex-end;
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: 10px;
+            margin-bottom: 8px;
             flex-wrap: wrap;
         }
-        .settings button {
-            background: var(--btn-bg);
-            border: none;
+        .settings-btn {
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
             padding: 6px 14px;
             border-radius: 40px;
             font-size: 0.7rem;
@@ -155,22 +151,25 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
-        .settings button:active { transform: scale(0.96); }
+        .settings-btn:hover {
+            transform: translateY(-1px);
+            border-color: var(--accent);
+        }
+        .settings-btn:active { transform: scale(0.96); }
 
-        /* Image Actions */
+        /* ========== IMAGE ACTIONS ========== */
         .image-actions {
             display: flex;
             gap: 12px;
             margin-bottom: 16px;
-            flex-wrap: wrap;
         }
-        .image-actions button {
+        .action-btn {
             flex: 1;
-            min-width: 120px;
-            background: var(--btn-bg);
-            border: none;
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
             padding: 12px;
             border-radius: 60px;
             font-weight: 600;
@@ -181,22 +180,29 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
-        .image-actions button:active { transform: scale(0.97); background: var(--btn-hover); }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+        .action-btn:active { transform: scale(0.97); }
 
-        /* Notes */
+        /* ========== NOTES SECTION ========== */
         .notes {
-            background: var(--bg-preview);
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
             border-radius: 20px;
-            padding: 12px;
+            padding: 14px;
             margin-bottom: 16px;
             border: 1px solid var(--border);
+            transition: all 0.2s;
         }
         .notes label {
             font-size: 0.7rem;
             font-weight: 500;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -204,7 +210,7 @@
         }
         .notes textarea {
             width: 100%;
-            background: var(--bg-card);
+            background: var(--bg-card-solid);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 10px 12px;
@@ -212,20 +218,26 @@
             font-family: inherit;
             color: var(--text);
             resize: vertical;
+            transition: all 0.2s;
         }
-        .notes textarea:focus { outline: none; border-color: var(--accent); }
+        .notes textarea:focus { 
+            outline: none; 
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
         .char-count {
             text-align: right;
             font-size: 0.6rem;
-            color: var(--text-muted);
-            margin-top: 4px;
+            color: var(--text-secondary);
+            margin-top: 6px;
         }
 
-        /* Preview */
+        /* ========== PREVIEW ========== */
         .preview {
-            background: var(--bg-preview);
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
             border-radius: 20px;
-            padding: 12px;
+            padding: 14px;
             text-align: center;
             margin-bottom: 16px;
             border: 1px solid var(--border);
@@ -233,54 +245,63 @@
         .preview img {
             max-width: 100%;
             max-height: 200px;
-            border-radius: 14px;
+            border-radius: 16px;
             object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        .preview img:hover {
+            transform: scale(1.02);
         }
         .preview .hint {
-            font-size: 0.65rem;
-            color: var(--text-muted);
+            font-size: 0.6rem;
+            color: var(--text-secondary);
             margin-top: 8px;
         }
 
-        /* Info Card */
+        /* ========== INFO CARD ========== */
         .info-card {
-            background: var(--bg-info);
-            border-radius: 20px;
-            padding: 14px;
+            background: linear-gradient(135deg, var(--bg-glass), rgba(16, 185, 129, 0.05));
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            padding: 18px;
             margin-bottom: 16px;
+            border: 1px solid var(--border);
         }
         .time {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--text);
             line-height: 1.2;
             display: flex;
             align-items: baseline;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
+            letter-spacing: -0.5px;
         }
         .date {
             font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-bottom: 10px;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            letter-spacing: 0.3px;
         }
         .location {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: var(--location-bg);
-            padding: 8px 12px;
-            border-radius: 40px;
+            gap: 10px;
+            background: rgba(16, 185, 129, 0.08);
+            padding: 10px 14px;
+            border-radius: 60px;
             font-size: 0.7rem;
             word-break: break-all;
             flex-wrap: wrap;
-            color: var(--location-text);
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
         .location i {
-            color: var(--text-muted);
+            color: var(--accent);
+            font-size: 0.8rem;
         }
         .location span {
-            color: var(--location-text);
+            color: var(--text);
             flex: 1;
         }
         .location-actions {
@@ -289,30 +310,30 @@
             margin-left: auto;
         }
         .location-actions span {
-            background: var(--location-action-bg);
-            padding: 4px 10px;
+            background: rgba(16, 185, 129, 0.15);
+            padding: 5px 12px;
             border-radius: 40px;
             cursor: pointer;
             font-size: 0.65rem;
             white-space: nowrap;
-            color: var(--location-action-text);
-            transition: 0.2s;
+            color: var(--accent);
+            font-weight: 500;
+            transition: all 0.2s;
         }
         .location-actions span:hover {
-            opacity: 0.8;
+            background: var(--accent);
+            color: white;
         }
         .location-actions span:active { transform: scale(0.95); }
 
-        /* Action Buttons */
+        /* ========== ACTION BUTTONS ========== */
         .actions {
             display: flex;
             gap: 12px;
             margin-bottom: 16px;
-            flex-wrap: wrap;
         }
-        .actions button {
+        .send-btn {
             flex: 1;
-            min-width: 120px;
             border: none;
             padding: 12px;
             border-radius: 60px;
@@ -324,55 +345,97 @@
             justify-content: center;
             gap: 8px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .actions button:active { transform: scale(0.97); }
+        .send-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+        .send-btn:active::before {
+            width: 200px;
+            height: 200px;
+        }
+        .send-btn:active { transform: scale(0.97); }
         .btn-text { background: var(--accent-wa-text); }
         .btn-image { background: var(--accent-wa); }
-        .actions button:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
+        .send-btn:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
 
-        /* Message Preview */
+        /* ========== MESSAGE PREVIEW ========== */
         .message-preview {
-            background: var(--bg-preview);
-            border-radius: 16px;
-            padding: 10px 12px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 12px 14px;
             font-size: 0.65rem;
-            font-family: monospace;
+            font-family: 'SF Mono', 'Fira Code', monospace;
             white-space: pre-wrap;
-            max-height: 100px;
+            max-height: 110px;
             overflow-y: auto;
             color: var(--text);
             border: 1px solid var(--border);
             margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .message-preview::-webkit-scrollbar {
+            width: 4px;
+        }
+        .message-preview::-webkit-scrollbar-track {
+            background: var(--border);
+            border-radius: 10px;
+        }
+        .message-preview::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
         }
 
-        /* Status */
+        /* ========== STATUS ========== */
         .status {
             font-size: 0.65rem;
             text-align: center;
-            padding: 8px;
+            padding: 8px 12px;
             border-radius: 40px;
-            background: var(--bg-info);
-            color: var(--text-muted);
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
         }
-        .status.success { background: #10b98120; color: #10b981; }
-        .status.error { background: #ef444420; color: #ef4444; }
+        .status.success { 
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .status.error { 
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
 
-        /* Footer */
+        /* ========== FOOTER ========== */
         .footer {
             text-align: center;
-            font-size: 0.6rem;
-            color: var(--text-muted);
+            font-size: 0.55rem;
+            color: var(--text-secondary);
             margin-top: 16px;
             padding: 8px;
-            line-height: 1.4;
+            line-height: 1.5;
+            opacity: 0.7;
         }
         .footer i {
-            color: #e74c3c;
+            color: var(--accent);
             margin: 0 2px;
         }
 
-        /* Modal Map */
+        /* ========== MODAL MAP ========== */
         .map-modal {
             display: none;
             position: fixed;
@@ -380,7 +443,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -388,105 +452,100 @@
         .map-modal.show { display: flex; }
         .map-container {
             width: 90%;
-            max-width: 500px;
+            max-width: 550px;
             height: 70vh;
-            background: var(--bg-card);
-            border-radius: 24px;
+            background: var(--bg-card-solid);
+            border-radius: 28px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
         }
         .map-header {
-            padding: 12px;
+            padding: 14px 16px;
             display: flex;
             justify-content: space-between;
-            background: var(--btn-bg);
+            align-items: center;
+            background: var(--bg-glass);
             border-bottom: 1px solid var(--border);
         }
-        .map-header h4 { color: var(--text); font-size: 0.9rem; }
+        .map-header h4 {
+            color: var(--text);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
         .close-map {
             background: none;
             border: none;
             font-size: 1.2rem;
             cursor: pointer;
-            color: var(--text);
+            color: var(--text-secondary);
             padding: 0 8px;
+            transition: 0.2s;
         }
-        #map { flex: 1; background: var(--bg-preview); }
+        .close-map:hover { color: var(--accent); }
+        #map { flex: 1; background: var(--bg-card-solid); }
         .map-footer {
-            padding: 12px;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             gap: 12px;
-            background: var(--btn-bg);
+            background: var(--bg-glass);
             border-top: 1px solid var(--border);
         }
         .map-footer button {
-            padding: 8px 16px;
+            padding: 8px 20px;
             border-radius: 40px;
             border: none;
             font-weight: 600;
             cursor: pointer;
+            transition: 0.2s;
         }
-        .confirm-loc { background: var(--accent); color: white; }
-        .cancel-loc { background: var(--btn-bg); color: var(--text); }
-        .coord-info { font-size: 0.65rem; color: var(--text-muted); }
+        .confirm-loc { 
+            background: var(--accent); 
+            color: white;
+        }
+        .cancel-loc { 
+            background: var(--bg-card-solid); 
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .coord-info { 
+            font-size: 0.65rem; 
+            color: var(--text-secondary);
+            font-family: monospace;
+        }
 
-        /* Responsif untuk mobile landscape */
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 767px) and (orientation: landscape) {
-            body {
-                padding: 12px;
-            }
-            .card {
-                padding: 16px;
-            }
-            .card.landscape .main-grid {
-                gap: 16px;
-            }
-            .preview img {
-                max-height: 140px;
-            }
-            .time {
-                font-size: 1.4rem;
-            }
-            .image-actions button,
-            .actions button {
-                padding: 8px;
-                font-size: 0.75rem;
-            }
-            .notes textarea {
-                font-size: 0.7rem;
-            }
+            body { padding: 12px; }
+            .card { padding: 18px; }
+            .card.landscape .main-grid { gap: 16px; }
+            .preview img { max-height: 130px; }
+            .time { font-size: 1.5rem; }
+            .action-btn, .send-btn { padding: 8px; font-size: 0.75rem; }
         }
 
-        /* Responsif untuk tablet portrait */
-        @media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
-            .card.portrait {
-                max-width: 550px;
-            }
-        }
-
-        /* Responsif untuk tablet landscape */
-        @media (min-width: 768px) and (max-width: 1023px) and (orientation: landscape) {
-            .card.landscape {
-                max-width: 95%;
-            }
-            .preview img {
-                max-height: 180px;
-            }
-        }
-
-        /* Responsif untuk desktop */
         @media (min-width: 1024px) {
-            .card.portrait {
-                max-width: 550px;
+            .card.portrait { max-width: 560px; }
+            .card.landscape { max-width: 1100px; }
+            .preview img { max-height: 260px; }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
-            .card.landscape {
-                max-width: 1000px;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
-            .preview img {
-                max-height: 250px;
-            }
+        }
+        .card {
+            animation: fadeInUp 0.5s ease-out;
         }
     </style>
 </head>
@@ -495,42 +554,40 @@
     <div class="main-grid">
         <!-- LEFT SECTION -->
         <div class="left-section">
-            <!-- Header -->
             <div class="header">
-                <h1>📸 Timestamp</h1>
-                <p>foto + waktu + lokasi</p>
+                <h1>Timestamp</h1>
+                <p>capture moment with proof</p>
             </div>
 
             <!-- Settings -->
             <div class="settings">
-                <button id="layoutBtn"><i class="fas fa-mobile-alt"></i> Portrait</button>
-                <button id="timeFormatBtn"><i class="fas fa-clock"></i> 24H</button>
-                <button id="themeBtn"><i class="fas fa-moon"></i> Dark</button>
+                <button class="settings-btn" id="layoutBtn"><i class="fas fa-mobile-alt"></i> Portrait</button>
+                <button class="settings-btn" id="timeFormatBtn"><i class="fas fa-clock"></i> 24H</button>
+                <button class="settings-btn" id="themeBtn"><i class="fas fa-moon"></i> Dark</button>
             </div>
 
             <!-- Image Actions -->
             <div class="image-actions">
-                <button id="galleryBtn"><i class="fas fa-images"></i> Galeri</button>
-                <button id="cameraBtn"><i class="fas fa-camera"></i> Kamera</button>
+                <button class="action-btn" id="galleryBtn"><i class="fas fa-images"></i> Gallery</button>
+                <button class="action-btn" id="cameraBtn"><i class="fas fa-camera"></i> Camera</button>
             </div>
 
             <!-- Notes -->
             <div class="notes">
-                <label><i class="fas fa-pen"></i> Catatan</label>
-                <textarea id="notesInput" rows="2" placeholder="Tambahkan catatan..."></textarea>
+                <label><i class="fas fa-pen-fancy"></i> Notes</label>
+                <textarea id="notesInput" rows="2" placeholder="Add notes... (max 200 chars)"></textarea>
                 <div class="char-count"><span id="charCount">0</span>/200</div>
             </div>
 
             <!-- Preview -->
             <div class="preview">
                 <img id="previewImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14h-2v-4H7v-2h2V7h2v4h4v2h-4v4z'/%3E%3C/svg%3E" alt="Preview">
-                <div class="hint"><i class="fas fa-watermark"></i> watermark: catatan di atas, waktu & lokasi di bawah</div>
+                <div class="hint"><i class="fas fa-watermark"></i> watermark: notes above, timestamp below</div>
             </div>
         </div>
 
         <!-- RIGHT SECTION -->
         <div class="right-section">
-            <!-- Info -->
             <div class="info-card">
                 <div class="time">
                     <span id="time">--:--</span>
@@ -538,34 +595,28 @@
                 </div>
                 <div class="date" id="date">---, -- --- ----</div>
                 <div class="location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span id="locationText">Mengambil lokasi...</span>
+                    <i class="fas fa-map-pin"></i>
+                    <span id="locationText">Getting location...</span>
                     <div class="location-actions">
-                        <span id="pickLocationBtn"><i class="fas fa-map"></i> Pilih</span>
+                        <span id="pickLocationBtn"><i class="fas fa-map"></i> Pick</span>
                         <span id="refreshLocationBtn"><i class="fas fa-sync-alt"></i></span>
                     </div>
                 </div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="actions">
-                <button id="sendTextBtn" class="btn-text"><i class="fab fa-whatsapp"></i> Teks</button>
-                <button id="sendImageBtn" class="btn-image"><i class="fas fa-camera"></i> Gambar</button>
+                <button id="sendTextBtn" class="send-btn btn-text"><i class="fab fa-whatsapp"></i> Text</button>
+                <button id="sendImageBtn" class="send-btn btn-image"><i class="fas fa-camera"></i> Image</button>
             </div>
         </div>
 
-        <!-- FULL WIDTH SECTION -->
+        <!-- FULL WIDTH -->
         <div class="full-width">
-            <!-- Message Preview -->
-            <div class="message-preview" id="messagePreview">Menunggu data...</div>
-
-            <!-- Status -->
-            <div id="status" class="status"><i class="fas fa-location-dot"></i> Mengambil lokasi...</div>
-            
-            <!-- Footer -->
+            <div class="message-preview" id="messagePreview">Waiting for data...</div>
+            <div id="status" class="status"><i class="fas fa-satellite-dish"></i> Getting location...</div>
             <div class="footer">
-                <i class="fas fa-heart"></i> Aplikasi ini Gratis tanpa ADS, gunakan dengan tepat dan Bijaksana! <i class="fas fa-hand-peace"></i><br>
-                share dan jadi berkat buat semua. <i class="fas fa-share-alt"></i>
+                <i class="fas fa-heart"></i> Free • No Ads • Use Wisely <i class="fas fa-hand-peace"></i><br>
+                share & be a blessing <i class="fas fa-share-alt"></i>
             </div>
         </div>
     </div>
@@ -575,15 +626,15 @@
 <div id="mapModal" class="map-modal">
     <div class="map-container">
         <div class="map-header">
-            <h4><i class="fas fa-map-marked-alt"></i> Pilih lokasi</h4>
+            <h4><i class="fas fa-map-marked-alt"></i> Pick Location</h4>
             <button class="close-map" id="closeMapBtn"><i class="fas fa-times"></i></button>
         </div>
         <div id="map"></div>
         <div class="map-footer">
-            <div class="coord-info" id="coordInfo">klik peta untuk pilih titik</div>
+            <div class="coord-info" id="coordInfo">tap map to select point</div>
             <div>
-                <button class="cancel-loc" id="cancelMapBtn">Batal</button>
-                <button class="confirm-loc" id="confirmMapBtn">Gunakan</button>
+                <button class="cancel-loc" id="cancelMapBtn">Cancel</button>
+                <button class="confirm-loc" id="confirmMapBtn">Use</button>
             </div>
         </div>
     </div>
@@ -595,7 +646,7 @@
         let selectedFile = null;
         let originalDataURL = null;
         let watermarkedBlob = null;
-        let location = { lat: null, lng: null, address: "Mengambil lokasi...", isManual: false };
+        let location = { lat: null, lng: null, address: "Getting location...", isManual: false };
         let notes = "";
         let timeFormat = "24";
         let layoutMode = "portrait";
@@ -634,7 +685,7 @@
         const confirmMapBtn = document.getElementById('confirmMapBtn');
         const coordInfo = document.getElementById('coordInfo');
         
-        // ========== Helper ==========
+        // Helper
         function showStatus(msg, isError = false) {
             statusDiv.innerHTML = msg;
             statusDiv.classList.remove('success', 'error');
@@ -642,12 +693,12 @@
             else statusDiv.classList.add('success');
             setTimeout(() => {
                 statusDiv.classList.remove('success', 'error');
-                if (location.lat) statusDiv.innerHTML = '✅ Siap';
-                else statusDiv.innerHTML = '<i class="fas fa-location-dot"></i> Siap';
+                if (location.lat) statusDiv.innerHTML = '✅ Ready';
+                else statusDiv.innerHTML = '<i class="fas fa-satellite-dish"></i> Ready';
             }, 2000);
         }
         
-        // ========== Time ==========
+        // Time
         function getFormattedTime(now) {
             if (timeFormat === "24") {
                 return { time: `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`, ampm: "" };
@@ -666,28 +717,27 @@
             if (timeFormat === "12") ampmSpan.textContent = ft.ampm;
             else ampmSpan.textContent = "24H";
             
-            const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-            const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             dateSpan.textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
             updateMessage();
         }
         
-        // ========== Message ==========
         function updateMessage() {
             const now = new Date();
             const ft = getFormattedTime(now);
             const timeFull = timeFormat === "12" ? `${ft.time} ${ft.ampm}` : ft.time;
-            const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-            const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             const dateFull = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
             
-            let locText = "Lokasi tidak tersedia";
+            let locText = "Location unavailable";
             let mapsLink = "";
             if (location.lat && location.lng) {
                 mapsLink = `https://maps.google.com/?q=${location.lat},${location.lng}`;
-                locText = location.address !== "Mengambil lokasi..." ? location.address : `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
+                locText = location.address !== "Getting location..." ? location.address : `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
                 if (location.isManual) locText += " (manual)";
-            } else if (location.address && location.address !== "Mengambil lokasi...") {
+            } else if (location.address && !location.address.includes("Getting")) {
                 locText = location.address;
             }
             
@@ -696,10 +746,10 @@
             messagePreview.textContent = msg;
         }
         
-        // ========== Location ==========
+        // Location
         function updateLocationDisplay() {
             let displayText = location.address;
-            if (location.lat && location.lng && location.address === "Mengambil lokasi...") {
+            if (location.lat && location.lng && location.address === "Getting location...") {
                 displayText = `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
             }
             if (location.isManual && location.lat) displayText += " (manual)";
@@ -707,14 +757,14 @@
         }
         
         function fetchAddress(lat, lng, cb) {
-            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=id`, {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=en`, {
                 headers: { 'User-Agent': 'TimestampApp/1.0' }
             })
             .then(r => r.json())
             .then(data => {
                 if (data.display_name) {
                     let addr = data.display_name;
-                    if (addr.length > 40) addr = addr.substring(0, 37) + '...';
+                    if (addr.length > 45) addr = addr.substring(0, 42) + '...';
                     location.address = addr;
                 } else {
                     location.address = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
@@ -735,36 +785,36 @@
             location.lat = lat;
             location.lng = lng;
             location.isManual = isManual;
-            location.address = "Mengambil alamat...";
+            location.address = "Fetching address...";
             updateLocationDisplay();
             fetchAddress(lat, lng);
         }
         
         function getGPS() {
             if (!navigator.geolocation) {
-                location.address = "⚠️ GPS tidak support";
+                location.address = "⚠️ GPS not supported";
                 location.lat = null;
                 location.lng = null;
                 updateLocationDisplay();
-                showStatus('GPS tidak support', true);
+                showStatus('GPS not supported', true);
                 return;
             }
-            showStatus('Mengambil lokasi GPS...');
+            showStatus('Getting GPS location...');
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
                     setLocation(pos.coords.latitude, pos.coords.longitude, false);
-                    showStatus('✅ Lokasi GPS berhasil');
+                    showStatus('✅ GPS location ready');
                 },
                 (err) => {
                     let msg = '';
                     if (err.code === 1) {
-                        msg = '⚠️ Izin lokasi ditolak';
+                        msg = '⚠️ Location permission denied';
                         location.address = msg;
                     } else if (err.code === 2) {
-                        msg = '⚠️ Lokasi tidak tersedia';
+                        msg = '⚠️ Location unavailable';
                         location.address = msg;
                     } else {
-                        msg = '⚠️ Timeout, coba lagi';
+                        msg = '⚠️ Timeout, try again';
                         location.address = msg;
                     }
                     location.lat = null;
@@ -778,7 +828,7 @@
             );
         }
         
-        // ========== Watermark ==========
+        // Watermark
         function wrapText(ctx, text, maxWidth) {
             let words = text.split(' ');
             let lines = [];
@@ -806,14 +856,14 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
                     
-                    const fontSize = Math.max(11, Math.floor(canvas.width / 32));
-                    ctx.font = `bold ${fontSize}px "Segoe UI"`;
+                    const fontSize = Math.max(12, Math.floor(canvas.width / 32));
+                    ctx.font = `600 ${fontSize}px "Inter", system-ui`;
                     const pad = fontSize * 0.6;
-                    const margin = 8;
+                    const margin = 10;
                     
                     const tsLines = [`📸 ${timeFull}`, `📍 ${locText}`];
                     const tsWidth = Math.max(...tsLines.map(l => ctx.measureText(l).width)) + pad * 2;
-                    const tsHeight = (fontSize * 1.4 * tsLines.length) + pad;
+                    const tsHeight = (fontSize * 1.5 * tsLines.length) + pad;
                     
                     let notesLines = [];
                     let notesWidth = 0;
@@ -822,7 +872,7 @@
                         const maxW = canvas.width * 0.65;
                         notesLines = wrapText(ctx, noteText, maxW);
                         notesWidth = Math.min(canvas.width * 0.7, Math.max(...notesLines.map(l => ctx.measureText(l).width)) + pad * 2);
-                        notesHeight = (fontSize * 1.4 * notesLines.length) + pad;
+                        notesHeight = (fontSize * 1.5 * notesLines.length) + pad;
                     }
                     
                     const tsX = canvas.width - tsWidth - margin;
@@ -830,29 +880,31 @@
                     
                     if (notesLines.length > 0) {
                         const notesX = canvas.width - notesWidth - margin;
-                        const notesY = tsY - notesHeight - 5;
+                        const notesY = tsY - notesHeight - 6;
                         if (notesX > 0 && notesY > 0) {
-                            ctx.fillStyle = 'rgba(0,0,0,0.65)';
+                            ctx.fillStyle = 'rgba(0,0,0,0.7)';
                             ctx.fillRect(notesX, notesY, notesWidth, notesHeight);
                             ctx.fillStyle = '#fff';
-                            ctx.shadowBlur = 1;
+                            ctx.shadowBlur = 2;
+                            ctx.shadowColor = 'rgba(0,0,0,0.3)';
                             notesLines.forEach((line, i) => {
-                                ctx.fillText(line, notesX + pad, notesY + pad + (fontSize * 1.4 * i) + fontSize * 0.7);
+                                ctx.fillText(line, notesX + pad, notesY + pad + (fontSize * 1.5 * i) + fontSize * 0.8);
                             });
                         }
                     }
                     
                     if (tsX > 0 && tsY > 0) {
-                        ctx.fillStyle = 'rgba(0,0,0,0.65)';
+                        ctx.fillStyle = 'rgba(0,0,0,0.7)';
                         ctx.fillRect(tsX, tsY, tsWidth, tsHeight);
                         ctx.fillStyle = '#fff';
-                        ctx.shadowBlur = 1;
+                        ctx.shadowBlur = 2;
+                        ctx.shadowColor = 'rgba(0,0,0,0.3)';
                         tsLines.forEach((line, i) => {
-                            ctx.fillText(line, tsX + pad, tsY + pad + (fontSize * 1.4 * i) + fontSize * 0.7);
+                            ctx.fillText(line, tsX + pad, tsY + pad + (fontSize * 1.5 * i) + fontSize * 0.8);
                         });
                     }
                     ctx.shadowBlur = 0;
-                    canvas.toBlob(resolve, 'image/jpeg', 0.85);
+                    canvas.toBlob(resolve, 'image/jpeg', 0.88);
                 };
                 img.src = dataURL;
             });
@@ -863,15 +915,15 @@
             const now = new Date();
             const ft = getFormattedTime(now);
             const timeFull = timeFormat === "12" ? `${ft.time} ${ft.ampm}` : ft.time;
-            const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-            const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             const dateFull = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
             
-            let locShort = "Lokasi tidak tersedia";
+            let locShort = "Location unavailable";
             if (location.lat && location.lng) {
-                locShort = location.address !== "Mengambil lokasi..." && location.address !== "Mengambil alamat..." ? location.address : `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
+                locShort = location.address !== "Getting location..." && location.address !== "Fetching address..." ? location.address : `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
                 if (location.isManual) locShort += " (manual)";
-            } else if (location.address && !location.address.includes("Mengambil")) {
+            } else if (location.address && !location.address.includes("Getting") && !location.address.includes("Fetching")) {
                 locShort = location.address;
             }
             
@@ -880,7 +932,7 @@
             previewImg.src = URL.createObjectURL(watermarked);
         }
         
-        // ========== Image ==========
+        // Image
         function triggerImage(useCamera = false) {
             const input = document.createElement('input');
             input.type = 'file';
@@ -892,32 +944,32 @@
                 const file = e.target.files[0];
                 if (!file) return;
                 selectedFile = file;
-                showStatus('Memproses gambar...');
+                showStatus('Processing image...');
                 const reader = new FileReader();
                 reader.onload = async (ev) => {
                     originalDataURL = ev.target.result;
                     await regenerateWatermark();
-                    showStatus('✅ Gambar siap');
+                    showStatus('✅ Image ready');
                 };
                 reader.readAsDataURL(file);
             };
             input.click();
         }
         
-        // ========== Send ==========
+        // Send
         function sendText() {
             let msg = messagePreview.textContent;
-            if (!msg || msg === "Menunggu data...") {
-                showStatus('Data belum siap', true);
+            if (!msg || msg === "Waiting for data...") {
+                showStatus('Data not ready', true);
                 return;
             }
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-            showStatus('WhatsApp terbuka');
+            showStatus('WhatsApp opened');
         }
         
         async function sendImage() {
             if (!selectedFile) {
-                showStatus('Ambil gambar dulu', true);
+                showStatus('Take a picture first', true);
                 return;
             }
             sendImageBtn.disabled = true;
@@ -927,20 +979,20 @@
                 const file = new File([watermarkedBlob], `report_${Date.now()}.jpg`, { type: 'image/jpeg' });
                 if (navigator.share && navigator.canShare?.({ files: [file] })) {
                     await navigator.share({ title: 'Timestamp Report', text: messagePreview.textContent, files: [file] });
-                    showStatus('✅ Terkirim');
+                    showStatus('✅ Shared');
                 } else {
-                    window.open(`https://wa.me/?text=${encodeURIComponent(messagePreview.textContent + "\n\n📸 Gambar siap di preview")}`, '_blank');
-                    showStatus('WhatsApp terbuka');
+                    window.open(`https://wa.me/?text=${encodeURIComponent(messagePreview.textContent + "\n\n📸 Image ready in preview")}`, '_blank');
+                    showStatus('WhatsApp opened');
                 }
             } catch (e) {
-                showStatus('Gagal: ' + e.message, true);
+                showStatus('Failed: ' + e.message, true);
             } finally {
                 sendImageBtn.disabled = false;
-                sendImageBtn.innerHTML = '<i class="fas fa-camera"></i> Gambar';
+                sendImageBtn.innerHTML = '<i class="fas fa-camera"></i> Image';
             }
         }
         
-        // ========== Map ==========
+        // Map
         function initMap() {
             if (map) return;
             let center = [location.lat || -6.2088, location.lng || 106.8456];
@@ -982,14 +1034,14 @@
         function useLocation() {
             if (tempLocation) {
                 setLocation(tempLocation.lat, tempLocation.lng, true);
-                showStatus('Lokasi manual dipilih');
+                showStatus('Manual location selected');
                 closeMap();
             } else {
-                showStatus('Pilih titik di peta dulu', true);
+                showStatus('Select a point on map first', true);
             }
         }
         
-        // ========== Notes ==========
+        // Notes
         function updateNotes() {
             let text = notesInput.value;
             if (text.length > 200) {
@@ -1002,27 +1054,17 @@
             if (selectedFile && originalDataURL) regenerateWatermark();
         }
         
-        // ========== Layout Settings ==========
+        // Layout
         function setLayout(mode) {
             layoutMode = mode;
             mainCard.classList.remove('portrait', 'landscape');
             mainCard.classList.add(mode);
-            
-            if (mode === 'portrait') {
-                layoutBtn.innerHTML = '<i class="fas fa-mobile-alt"></i> Portrait';
-            } else {
-                layoutBtn.innerHTML = '<i class="fas fa-tablet-alt"></i> Landscape';
-            }
+            layoutBtn.innerHTML = mode === 'portrait' ? '<i class="fas fa-mobile-alt"></i> Portrait' : '<i class="fas fa-tablet-alt"></i> Landscape';
             localStorage.setItem('layout', mode);
-            
-            setTimeout(() => {
-                if (map) map.invalidateSize();
-            }, 100);
+            setTimeout(() => { if (map) map.invalidateSize(); }, 100);
         }
         
-        function toggleLayout() {
-            setLayout(layoutMode === 'portrait' ? 'landscape' : 'portrait');
-        }
+        function toggleLayout() { setLayout(layoutMode === 'portrait' ? 'landscape' : 'portrait'); }
         
         function toggleTime() {
             timeFormat = timeFormat === "24" ? "12" : "24";
@@ -1039,20 +1081,17 @@
             localStorage.setItem('theme', theme);
         }
         
-        // ========== Init ==========
+        // Init
         function init() {
-            // Theme
             let savedTheme = localStorage.getItem('theme');
             if (savedTheme) theme = savedTheme;
             document.body.className = theme;
             themeBtn.innerHTML = theme === 'dark' ? '<i class="fas fa-moon"></i> Dark' : '<i class="fas fa-sun"></i> Light';
             
-            // Layout
             let savedLayout = localStorage.getItem('layout');
             if (savedLayout === 'landscape') setLayout('landscape');
             else setLayout('portrait');
             
-            // Time Format
             let savedTime = localStorage.getItem('timeFormat');
             if (savedTime) {
                 timeFormat = savedTime;
